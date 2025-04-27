@@ -1,0 +1,137 @@
+Roll:24SW126
+import java.util.*;
+
+
+class Product {
+    private String name;
+    private double price; 
+
+    public Product(String name, double price) {
+        this.name = name;
+        this.price = price;
+    }
+
+    public void display() {
+        System.out.println("- " + name + " (Rs. " + price + ")");
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+}
+
+
+class Company {
+    protected String name;
+    protected String location;
+    protected List<Product> products;
+
+    public Company(String name, String location, List<Product> products) {
+        this.name = name;
+        this.location = location;
+        this.products = products;
+    }
+
+    public void displayInfo() {
+        System.out.println("Company: " + name);
+        System.out.println("Location: " + location);
+        System.out.println("Products:");
+        for (Product product : products) {
+            product.display();
+        }
+    }
+}
+
+
+class Employee {
+    private String name;
+    private int id;
+    private String role;
+
+    public Employee(String name, int id, String role) {
+        this.name = name;
+        this.id = id;
+        this.role = role;
+    }
+
+    public void display() {
+        System.out.println("ID: " + id + ", Name: " + name + ", Role: " + role);
+    }
+}
+
+
+class Department {
+    private String departmentName;
+    private Company company;
+    private List<Employee> employees;
+
+    public Department(String departmentName, Company company, List<Employee> employees) {
+        this.departmentName = departmentName;
+        this.company = company;
+        this.employees = employees;
+    }
+
+    public void showDepartmentDetails() {
+        System.out.println("\n--- Department Details ---");
+        System.out.println("Department: " + departmentName);
+        company.displayInfo();
+        System.out.println("Employees:");
+        for (Employee e : employees) {
+            e.display();
+        }
+    }
+}
+
+
+class ProductionThread extends Thread {
+    private String fertilizerType;
+
+    public ProductionThread(String fertilizerType) {
+        this.fertilizerType = fertilizerType;
+    }
+
+    public void run() {
+        System.out.println("Starting production of: " + fertilizerType);
+        try {
+            Thread.sleep(2000); 
+        } catch (InterruptedException e) {
+            System.out.println("Production interrupted.");
+        }
+        System.out.println("Finished production of: " + fertilizerType);
+    }
+}
+
+
+public class EngroFertilizerCompany {
+    public static void main(String[] args) {
+
+        List<Product> productList = Arrays.asList(
+            new Product("Urea (50kg)", 4400),
+            new Product("DAP (50kg)", 12600),
+            new Product("Zarkhez Khas NPK 15-15-15 (50kg)", 9400),
+            new Product("Nitrophos NP (50kg)", 7650)
+        );
+
+        Company engro = new Company("Engro Fertilizers", "Karachi", productList);
+
+        List<Employee> empList = Arrays.asList(
+            new Employee("Ahmed", 101, "Engineer"),
+            new Employee("Bilal", 102, "Manager"),
+            new Employee("Fahad", 103, "Technician")
+        );
+
+        Department productionDept = new Department("Production", engro, empList);
+        productionDept.showDepartmentDetails();
+
+        System.out.println("\n--- Production Simulation ---");
+        Thread t1 = new ProductionThread("Urea");
+        Thread t2 = new ProductionThread("DAP");
+
+        t1.start();
+        t2.start();
+    }
+}
